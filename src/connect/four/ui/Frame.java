@@ -125,16 +125,15 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	
 	private void startNewGame() {
 		if (newGameDialog.makeVisible()) {
-			player = Board.PLAYERS[0];
-			
-			pointer.changeColor(player);
-			board.reset();
-			discController.reset();
-			
 			for (byte i = 0; i < artificialIntelligence.length; i++) {
 				artificialIntelligence[i].reset();		// set makeMove -> false...
 				artificialIntelligence[i].setDepth(newGameDialog.gameSettings.depth);
 			}
+			
+			player = Board.PLAYERS[0];
+			pointer.changeColor(player);
+			board.reset();
+			discController.reset();
 			
 			getContentPane().repaint();
 			makeArtificiallyIntelligentMove();		// AI will make a move only when needed...
@@ -151,44 +150,49 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 		if (board.isGameOver()) {		// match drawn is not being informed...
 			board.gameOver = true;
 			
-			discController.markWinner(board);
-			
-			// this portion needs to be greatly modified... (GARBAGE CODE) :(
-			if (newGameDialog.gameSettings.mode == 0) {
-				int player = this.player;
-				
-				if (player == Board.PLAYERS[0]) {
-					player = 2;
-				}
-				else {
-					player = 1;
-				}
-				
-				JOptionPane.showMessageDialog(this, "Player " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if (newGameDialog.gameSettings.mode == 1) {
-				String winningMessage;
-				
-				if (player == newGameDialog.gameSettings.player) {
-					winningMessage = "Artificial Intelligence is";
-				}
-				else {
-					winningMessage = "You are";
-				}
-				
-				JOptionPane.showMessageDialog(this, winningMessage + " the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
+			if (board.winner == Main.DEFAULT) {
+				JOptionPane.showMessageDialog(this, "Match is drawn.", getTitle() + " - Game Over", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
-				int player = this.player;
+				discController.markWinner(board);
 				
-				if (player == Board.PLAYERS[0]) {
-					player = 2;
+				// this portion needs to be greatly modified... (GARBAGE CODE) :(
+				if (newGameDialog.gameSettings.mode == 0) {
+					int player = this.player;
+					
+					if (player == Board.PLAYERS[0]) {
+						player = 2;
+					}
+					else {
+						player = 1;
+					}
+					
+					JOptionPane.showMessageDialog(this, "Player " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else if (newGameDialog.gameSettings.mode == 1) {
+					String winningMessage;
+					
+					if (player == newGameDialog.gameSettings.player) {
+						winningMessage = "Artificial Intelligence is";
+					}
+					else {
+						winningMessage = "You are";
+					}
+					
+					JOptionPane.showMessageDialog(this, winningMessage + " the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					player = 1;
+					int player = this.player;
+					
+					if (player == Board.PLAYERS[0]) {
+						player = 2;
+					}
+					else {
+						player = 1;
+					}
+					
+					JOptionPane.showMessageDialog(this, "Artificial Intelligence " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
 				}
-				
-				JOptionPane.showMessageDialog(this, "Artificial Intelligence " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}

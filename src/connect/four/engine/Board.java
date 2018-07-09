@@ -118,8 +118,8 @@ public class Board {
                 
 				for (k = 0; k < numberOfConsecutiveDiscs; k++) {
                     if (player == Main.DEFAULT && player != board[i][j + k] && board[i][j] == board[i][j + k]) {
-                    	occurrence = (occurrence * 10) + i;
-                    	occurrence = (occurrence * 10) + (j + k);
+                    	occurrence = (occurrence * 10) + (i + 1);
+                    	occurrence = (occurrence * 10) + (j + k + 1);
                     	
                         flag++;
                     }
@@ -151,8 +151,8 @@ public class Board {
                 
                 for (k = 0; k < numberOfConsecutiveDiscs; k++) {
                     if (player == Main.DEFAULT && player != board[i - k][j] && board[i][j] == board[i - k][j]) {
-                    	occurrence = (occurrence * 10) + (i - k);
-                    	occurrence = (occurrence * 10) + j;
+                    	occurrence = (occurrence * 10) + (i - k + 1);
+                    	occurrence = (occurrence * 10) + (j + 1);
                     	
                     	flag++;
                     }
@@ -184,8 +184,8 @@ public class Board {
                 
                 for (k = 0; k < numberOfConsecutiveDiscs; k++) {
                     if (player == Main.DEFAULT && player != board[i + k][j + k] && board[i][j] == board[i + k][j + k]) {
-                    	occurrence = (occurrence * 10) + (i + k);
-                    	occurrence = (occurrence * 10) + (j + k);
+                    	occurrence = (occurrence * 10) + (i + k + 1);
+                    	occurrence = (occurrence * 10) + (j + k + 1);
                     	
                     	flag++;
                     }
@@ -217,8 +217,8 @@ public class Board {
                 
                 for (k = 0; k < numberOfConsecutiveDiscs; k++) {
                     if (player == Main.DEFAULT && player != board[i - k][j + k] && board[i][j] == board[i - k][j + k]) {
-                    	occurrence = (occurrence * 10) + (i - k);
-                    	occurrence = (occurrence * 10) + (j + k);
+                    	occurrence = (occurrence * 10) + (i - k + 1);
+                    	occurrence = (occurrence * 10) + (j + k + 1);
                     	
                         flag++;
                     }

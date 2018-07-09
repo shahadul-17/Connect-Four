@@ -69,10 +69,10 @@ public class DiscController {
 			int digit = winningDiscs % 10;
 			
 			if (counter == 0) {
-				j = (byte)digit;
+				j = (byte)(digit - 1);
 			}
 			else {
-				i = (byte)digit;
+				i = (byte)(digit - 1);
 			}
 			
 			winningDiscs /= 10;
