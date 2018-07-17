@@ -1,5 +1,6 @@
 package connect.four.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -15,10 +16,10 @@ import java.awt.event.WindowListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -34,13 +35,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	private byte player = Board.PLAYERS[0];		// setting Player-1 as first player...
 	private static final long serialVersionUID = 6210472781464718706L;
 	
-	public static final Color[] TRANSPARENT_BLACK_COLORS = {
-		new Color(0, 0, 0, 80), new Color(0, 0, 0, 98)
-	};
+	private String lastGameStatus;
 	
+	private Color lastStatusBarColor;
+	private JPanel panelBoard;
 	private Disc pointer;
 	private DiscController discController;
-	private JPanel panelBoard;
+	private JLabel statusBar;
 	
 	private NewGameDialog newGameDialog;
 	private Board board;
@@ -86,25 +87,28 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 		
 		newGameDialog = new NewGameDialog(375, 185, getTitle() + " - New Game", this);
 		
-		PanelBackground contentPane = new PanelBackground("background.jpg");
+		JPanel contentPane = new JPanel(new BorderLayout());
 		setContentPane(contentPane);
+		
+		PanelBackground panelCenter = new PanelBackground("background.jpg");
+		contentPane.add(panelCenter, BorderLayout.CENTER);
 		
 		panelBoard = new JPanel(new GridLayout(Main.BOARD_HEIGHT, Main.BOARD_WIDTH));
 		panelBoard.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelBoard.setSize(new Dimension(Main.BOARD_WIDTH * Main.DISC_SIZE, Main.BOARD_HEIGHT * Main.DISC_SIZE));
 		panelBoard.setLocation((getWidth() / 2) - (panelBoard.getWidth() / 2), (getHeight() / 2) - (panelBoard.getHeight() / 2) - 30);
-		panelBoard.setBackground(Frame.TRANSPARENT_BLACK_COLORS[0]);
+		panelBoard.setBackground(ColorCollection.TRANSPARENT_BLACKS[0]);
 		panelBoard.addMouseMotionListener(this);
-		contentPane.add(panelBoard);
+		panelCenter.add(panelBoard);
 		
 		pointer = new Disc(Board.PLAYERS[0]);
 		pointer.setSize(Main.DISC_SIZE, Main.DISC_SIZE);
 		pointer.setLocation(panelBoard.getX() + 6, panelBoard.getY() - pointer.getHeight());
-		contentPane.add(pointer);
+		panelCenter.add(pointer);
 		
 		discController = new DiscController();
 		discController.addDiscListener(this);
-		discController.initializePool(contentPane);		// initializes all the discs...
+		discController.initializePool(panelCenter);		// initializes all the discs...
 		
 		for (byte i = 0; i < Main.BOARD_HEIGHT; i++) {
 			for (byte j = 0; j < Main.BOARD_WIDTH; j++) {
@@ -114,6 +118,14 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 				panelBoard.add(hollowDisc);
 			}
 		}
+		
+		statusBar = new JLabel("Select game mode");
+		statusBar.setOpaque(true);
+		statusBar.setBackground(ColorCollection.INDIGO);
+		statusBar.setForeground(Color.WHITE);
+		statusBar.setPreferredSize(new Dimension(0, Main.STATUS_BAR_HEIGHT));
+		statusBar.setBorder(new EmptyBorder(0, 5, 0, 5));
+		contentPane.add(statusBar, BorderLayout.SOUTH);
 	}
 	
 	private void makeArtificiallyIntelligentMove() {
@@ -124,6 +136,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	}
 	
 	private void startNewGame() {
+		statusBar.setText("Select game mode");
+		statusBar.setBackground(ColorCollection.INDIGO);
+		
 		if (newGameDialog.makeVisible()) {
 			for (byte i = 0; i < artificialIntelligence.length; i++) {
 				artificialIntelligence[i].reset();		// set makeMove -> false...
@@ -131,12 +146,21 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 			}
 			
 			player = Board.PLAYERS[0];
+			
 			pointer.changeColor(player);
 			board.reset();
 			discController.reset();
+			pointer.getParent().repaint();
+			statusBar.setText(newGameDialog.getGameMode());
 			
-			getContentPane().repaint();
 			makeArtificiallyIntelligentMove();		// AI will make a move only when needed...
+		}
+		else if (!board.gameOver) {
+			statusBar.setText(newGameDialog.getGameMode());
+		}
+		else {
+			statusBar.setText(lastGameStatus);
+			statusBar.setBackground(lastStatusBarColor);
 		}
 	}
 	
@@ -151,48 +175,47 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 			board.gameOver = true;
 			
 			if (board.winner == Main.DEFAULT) {
-				JOptionPane.showMessageDialog(this, "Match is drawn.", getTitle() + " - Game Over", JOptionPane.INFORMATION_MESSAGE);
+				lastGameStatus = "Match is drawn";
+				lastStatusBarColor = ColorCollection.ORANGE_RED;
+				
+				statusBar.setText(lastGameStatus);
+				statusBar.setBackground(lastStatusBarColor);
 			}
 			else {
-				discController.markWinner(board);
+				String text;
 				
-				// this portion needs to be greatly modified... (GARBAGE CODE) :(
-				if (newGameDialog.gameSettings.mode == 0) {
-					int player = this.player;
-					
-					if (player == Board.PLAYERS[0]) {
-						player = 2;
+				if (newGameDialog.gameSettings.mode == 1) {
+					if (board.winner == newGameDialog.gameSettings.player) {
+						text = "You won";
 					}
 					else {
-						player = 1;
+						text = "Artificial Intelligence wins";
 					}
-					
-					JOptionPane.showMessageDialog(this, "Player " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
-				}
-				else if (newGameDialog.gameSettings.mode == 1) {
-					String winningMessage;
-					
-					if (player == newGameDialog.gameSettings.player) {
-						winningMessage = "Artificial Intelligence is";
-					}
-					else {
-						winningMessage = "You are";
-					}
-					
-					JOptionPane.showMessageDialog(this, winningMessage + " the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					int player = this.player;
-					
-					if (player == Board.PLAYERS[0]) {
-						player = 2;
+					if (board.winner == Board.PLAYERS[0]) {
+						text = "Blue";
 					}
 					else {
-						player = 1;
+						text = "Green";
 					}
 					
-					JOptionPane.showMessageDialog(this, "Artificial Intelligence " + player + " is the winner.", getTitle() + " - Winner", JOptionPane.INFORMATION_MESSAGE);
+					if (newGameDialog.gameSettings.mode == 0) {
+						text = "Player " + text;
+					}
+					else {
+						text += " Artificial Intelligence (AI)";
+					}
+					
+					text += " wins";
 				}
+				
+				lastGameStatus = text;
+				lastStatusBarColor = ColorCollection.DISC_COLORS[board.winner];
+				
+				discController.markWinner(board);
+				statusBar.setText(lastGameStatus);
+				statusBar.setBackground(lastStatusBarColor);
 			}
 		}
 	}
@@ -241,7 +264,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	
 	@Override
 	public void componentResized(ComponentEvent event) {
-		panelBoard.setLocation((getWidth() / 2) - (panelBoard.getWidth() / 2), (getHeight() / 2) - (panelBoard.getHeight() / 2) - 30);
+		panelBoard.setLocation((pointer.getParent().getWidth() / 2) - (panelBoard.getWidth() / 2), (pointer.getParent().getHeight() / 2) - (panelBoard.getHeight() / 2));
 		pointer.setLocation(pointer.getX(), panelBoard.getY() - pointer.getHeight());		// might be optional...
 		discController.updateDiscLocation(panelBoard.getBounds());
 	}

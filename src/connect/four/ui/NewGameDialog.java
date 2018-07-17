@@ -101,6 +101,10 @@ public class NewGameDialog extends JDialog implements ActionListener, WindowList
 		return flag;
 	}
 	
+	public String getGameMode() {
+		return GAME_MODES[gameSettings.mode];
+	}
+	
 	public GameSettings getGameSettings() {
 		return gameSettings;
 	}

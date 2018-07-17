@@ -4,17 +4,16 @@ import connect.four.Main;
 
 public class Move {
 	
-	public byte rowIndex, columnIndex, player;
+	public byte rowIndex, columnIndex;
 	public int value;
 	
 	public Move() {
-		value = rowIndex = columnIndex = player = Main.DEFAULT;		// initializing...
+		value = rowIndex = columnIndex = Main.DEFAULT;		// initializing...
 	}
 	
-	public Move(byte rowIndex, byte columnIndex, byte player) {
+	public Move(byte rowIndex, byte columnIndex) {
 		this.rowIndex = rowIndex;
 		this.columnIndex = columnIndex;
-		this.player = player;
 	}
 	
 	public Move(int value, Move move) {
@@ -28,4 +27,5 @@ public class Move {
 		this.rowIndex = move.rowIndex;
 		this.columnIndex = move.columnIndex;
 	}
+	
 }

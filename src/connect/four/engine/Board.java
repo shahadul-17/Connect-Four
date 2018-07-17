@@ -14,12 +14,26 @@ public class Board {
 	};
 	private byte[][] board;
 	
-	public Move lastMove;
+	public Move move;		// the last move that was made in this board...
 	
 	public Board() {
 		board = new byte[Main.BOARD_HEIGHT][Main.BOARD_WIDTH];
 		
 		reset();
+	}
+	
+	public Board(Board board) {
+		winner = board.winner;
+		this.board = new byte[Main.BOARD_HEIGHT][Main.BOARD_WIDTH];
+		
+		move = new Move(board.move.value, board.move);
+		// move.player = board.move.player;
+		
+		for (byte i = 0; i < Main.BOARD_HEIGHT; i++) {
+			for (byte j = 0; j < Main.BOARD_WIDTH; j++) {
+				this.board[i][j] = board.board[i][j];
+			}
+		}
 	}
 	
 	public void reset() {
@@ -32,21 +46,8 @@ public class Board {
 			}
 		}
 		
-		lastMove = new Move();
-		lastMove.player = PLAYERS[1];		// player that played last...
-	}
-	
-	public Board(Board board) {
-		winner = board.winner;
-		this.board = new byte[Main.BOARD_HEIGHT][Main.BOARD_WIDTH];
-		lastMove = new Move(board.lastMove.value, board.lastMove);
-		lastMove.player = board.lastMove.player;
-		
-		for (byte i = 0; i < Main.BOARD_HEIGHT; i++) {
-			for (byte j = 0; j < Main.BOARD_WIDTH; j++) {
-				this.board[i][j] = board.board[i][j];
-			}
-		}
+		move = new Move();
+		// move.player = PLAYERS[0];		// setting Player-1 as first player...
 	}
 	
 	public byte getValue(byte rowIndex, byte columnIndex) {
@@ -76,7 +77,7 @@ public class Board {
 		
 		if (rowIndex != Main.DEFAULT) {
 			board[rowIndex][columnIndex] = player;
-			lastMove = new Move(rowIndex, columnIndex, player);
+			move = new Move(rowIndex, columnIndex);
 		}
 		
 		return rowIndex;
@@ -84,7 +85,7 @@ public class Board {
 	
 	public void makeMove(byte rowIndex, byte columnIndex, byte player) {		// returns if move was successfully made...
 		board[rowIndex][columnIndex] = player;
-		lastMove = new Move(rowIndex, columnIndex, player);
+		move = new Move(rowIndex, columnIndex);
 	}
 	
 	public Board[] getAllPossibleBoards(byte player) {

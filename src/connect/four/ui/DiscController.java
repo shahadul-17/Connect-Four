@@ -78,9 +78,9 @@ public class DiscController {
 			winningDiscs /= 10;
 			
 			if (i != -1 && j != -1) {
-				for (int y = 0; y < pool[board.lastMove.player].length; y++) {
-					if (pool[board.lastMove.player][y].rowIndex == i && pool[board.lastMove.player][y].columnIndex == j) {
-						pool[board.lastMove.player][y].markWinner();
+				for (int y = 0; y < pool[board.winner].length; y++) {
+					if (pool[board.winner][y].rowIndex == i && pool[board.winner][y].columnIndex == j) {
+						pool[board.winner][y].markWinner();
 						
 						break;
 					}

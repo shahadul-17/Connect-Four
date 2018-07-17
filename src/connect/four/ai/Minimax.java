@@ -31,7 +31,7 @@ public class Minimax {
 		Move move = new Move();
 		
 		if (!Main.running || depth == maximumDepth || board.isGameOver()) {
-			move.setMove(board.evaluate(), board.lastMove);
+			move.setMove(board.evaluate(), board.move);
 			
 			return move;
 		}
@@ -55,7 +55,7 @@ public class Minimax {
 			if ((tempMove.value == move.value && random.nextInt(Board.PLAYERS.length) == 0) ||
 					(player == Board.PLAYERS[0] && tempMove.value > move.value) ||
 					(player == Board.PLAYERS[1] && tempMove.value < move.value)) {
-				move.setMove(tempMove.value, boards[i].lastMove);
+				move.setMove(tempMove.value, boards[i].move);
 			}
 		}
 		

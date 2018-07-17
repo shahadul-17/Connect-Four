@@ -26,14 +26,12 @@ public class Disc extends JLabel implements ActionListener {
 	private DiscListener discListener;
 	
 	private Color color;
-	private static final Color[] DISC_COLORS = {
-		new Color(23, 232, 38), new Color(30, 144, 255)
-	};
+	
 	private Timer timer;
 	
 	public Disc(byte player) {
 		hollow = false;
-		color = DISC_COLORS[player];
+		color = ColorCollection.DISC_COLORS[player];
 		
 		timer = new Timer(Main.DISC_TIMER_DELAY, this);
 		timer.setRepeats(true);
@@ -44,7 +42,7 @@ public class Disc extends JLabel implements ActionListener {
 		this.rowIndex = rowIndex;
 		this.columnIndex = columnIndex;
 		
-		color = Frame.TRANSPARENT_BLACK_COLORS[1];
+		color = ColorCollection.TRANSPARENT_BLACKS[1];
 	}
 	
 	public void reset() {
@@ -72,7 +70,7 @@ public class Disc extends JLabel implements ActionListener {
 	}
 	
 	public void changeColor(byte colorState) {
-		color = DISC_COLORS[colorState];
+		color = ColorCollection.DISC_COLORS[colorState];
 		
 		paintComponent(getGraphics());
 	}
