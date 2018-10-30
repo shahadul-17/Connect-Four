@@ -8,29 +8,34 @@ import connect.four.engine.Move;
 
 public class Minimax {
 	
-	private byte player, maximumDepth;
+	private byte player;
+	private short maximumDepth;
+	private int alpha, beta;
 	
 	private Random random;
 	
-	public Minimax(byte player, byte maximumDepth) {
+	public Minimax(byte player, short maximumDepth) {
 		this.maximumDepth = maximumDepth;
 		this.player = player;
 		
 		random = new Random();
 	}
 	
-	public void setMaximumDepth(byte maximumDepth) {
+	public void setMaximumDepth(short maximumDepth) {
 		this.maximumDepth = maximumDepth;
 	}
 	
 	public Move takeDecision(Board board) {
-		return takeDecision(player, (byte)0, board);
+		alpha = Integer.MIN_VALUE;
+		beta = Integer.MAX_VALUE;
+		
+		return takeDecision(player, (short)0, board);
 	}
 	
-	private Move takeDecision(byte player, byte depth, Board board) {
+	private Move takeDecision(byte player, short depth, Board board) {
 		Move move = new Move();
 		
-		if (!Main.running || depth == maximumDepth || board.isGameOver()) {
+		if (!Main.running || depth == maximumDepth || alpha > beta || board.isGameOver()) {
 			move.setMove(board.evaluate(), board.move);
 			
 			return move;
@@ -52,10 +57,22 @@ public class Minimax {
 			
 			Move tempMove = takeDecision(Board.PLAYERS[player], (byte)(depth + 1), boards[i]);
 			
-			if ((tempMove.value == move.value && random.nextInt(Board.PLAYERS.length) == 0) ||
-					(player == Board.PLAYERS[0] && tempMove.value > move.value) ||
-					(player == Board.PLAYERS[1] && tempMove.value < move.value)) {
+			if (tempMove.value == move.value && random.nextInt(Board.PLAYERS.length) == 0) {
 				move.setMove(tempMove.value, boards[i].move);
+			}
+			else if (player == Board.PLAYERS[0] && tempMove.value > move.value) {
+				move.setMove(tempMove.value, boards[i].move);
+				
+				if (alpha < move.value) {
+					alpha = move.value;
+				}
+			}
+			else if (player == Board.PLAYERS[1] && tempMove.value < move.value) {
+				move.setMove(tempMove.value, boards[i].move);
+				
+				if (beta > move.value) {
+					beta = move.value;
+				}
 			}
 		}
 		

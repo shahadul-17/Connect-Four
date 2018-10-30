@@ -102,7 +102,7 @@ public class NewGameDialog extends JDialog implements ActionListener, WindowList
 	}
 	
 	public String getGameMode() {
-		return GAME_MODES[gameSettings.mode];
+		return GAME_MODES[gameSettings.getMode()];
 	}
 	
 	public GameSettings getGameSettings() {
@@ -142,13 +142,13 @@ public class NewGameDialog extends JDialog implements ActionListener, WindowList
 		else if (source.equals(buttonStart)) {
 			flag = true;
 			
-			gameSettings.mode = (byte)comboBoxGameModes.getSelectedIndex();
+			gameSettings.setMode((byte)comboBoxGameModes.getSelectedIndex());
 			
-			if (gameSettings.mode == 1) {
-				gameSettings.player = Board.PLAYERS[comboBoxPlayAs.getSelectedIndex()];
+			if (gameSettings.getMode() == 1) {
+				gameSettings.setPlayer(Board.PLAYERS[comboBoxPlayAs.getSelectedIndex()]);
 			}
 			else {
-				gameSettings.player = Board.PLAYERS[0];		// set as player 1...
+				gameSettings.setPlayer(Board.PLAYERS[0]);		// set as player 1...
 			}
 			
 			gameSettings.setDepth((byte)comboBoxDifficultyLevels.getSelectedIndex());

@@ -13,12 +13,12 @@ public class ArtificialIntelligence implements Runnable {
 	private Minimax minimax;
 	private Board board;
 	
-	public ArtificialIntelligence(byte player, byte depth, Board board) {
+	public ArtificialIntelligence(byte player, short depth, Board board) {
 		minimax = new Minimax(player, depth);
 		this.board = board;
 	}
 	
-	public void setDepth(byte depth) {
+	public void setDepth(short depth) {
 		minimax.setMaximumDepth(depth);
 	}
 	

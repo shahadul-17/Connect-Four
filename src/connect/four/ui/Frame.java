@@ -129,8 +129,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	}
 	
 	private void makeArtificiallyIntelligentMove() {
-		if ((newGameDialog.gameSettings.mode == 1 && newGameDialog.gameSettings.player != player) ||
-				newGameDialog.gameSettings.mode == 2) {
+		if ((newGameDialog.gameSettings.getMode() == 1 && newGameDialog.gameSettings.getPlayer() != player) ||
+				newGameDialog.gameSettings.getMode() == 2) {
 			artificialIntelligence[player].makeMove();
 		}
 	}
@@ -142,7 +142,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 		if (newGameDialog.makeVisible()) {
 			for (byte i = 0; i < artificialIntelligence.length; i++) {
 				artificialIntelligence[i].reset();		// set makeMove -> false...
-				artificialIntelligence[i].setDepth(newGameDialog.gameSettings.depth);
+				artificialIntelligence[i].setDepth(newGameDialog.gameSettings.getDepth());
 			}
 			
 			player = Board.PLAYERS[0];
@@ -184,8 +184,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 			else {
 				String text;
 				
-				if (newGameDialog.gameSettings.mode == 1) {
-					if (board.winner == newGameDialog.gameSettings.player) {
+				if (newGameDialog.gameSettings.getMode() == 1) {
+					if (board.winner == newGameDialog.gameSettings.getPlayer()) {
 						text = "You won";
 					}
 					else {
@@ -200,7 +200,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 						text = "Green";
 					}
 					
-					if (newGameDialog.gameSettings.mode == 0) {
+					if (newGameDialog.gameSettings.getMode() == 0) {
 						text = "Player " + text;
 					}
 					else {
@@ -243,8 +243,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, Mous
 	
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		if (board.gameOver || (newGameDialog.gameSettings.mode == 1 && newGameDialog.gameSettings.player != player) ||
-				newGameDialog.gameSettings.mode == 2) {
+		if (board.gameOver || (newGameDialog.gameSettings.getMode() == 1 && newGameDialog.gameSettings.getMode() != player) ||
+				newGameDialog.gameSettings.getMode() == 2) {
 			return;
 		}
 		

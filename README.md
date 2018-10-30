@@ -10,5 +10,5 @@ According to Wikipedia, connect four is a two-player connection game in which th
 3) Beautiful user interface.  
 
 # Notes
-1) AI is implemented using minimax algorithm.
-2) This project might contain some major/minor bugs that will be fixed later.
+1) AI is implemented using minimax algorithm with alpha-beta pruning.  
+2) This project might contain some major/minor bugs that will be fixed later.  
