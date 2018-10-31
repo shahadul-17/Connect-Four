@@ -55,22 +55,19 @@ public class Minimax {
 				continue;		// skipping null objects...
 			}
 			
+			boolean[] flags = new boolean[2];
+			
 			Move tempMove = takeDecision(Board.PLAYERS[player], (byte)(depth + 1), boards[i]);
 			
-			if (tempMove.value == move.value && random.nextInt(Board.PLAYERS.length) == 0) {
-				move.setMove(tempMove.value, boards[i].move);
-			}
-			else if (player == Board.PLAYERS[0] && tempMove.value > move.value) {
+			if ((tempMove.value == move.value && random.nextInt(Board.PLAYERS.length) == 0) ||
+					(flags[0] = (player == Board.PLAYERS[0] && tempMove.value > move.value)) ||
+					(flags[1] = (player == Board.PLAYERS[1] && tempMove.value < move.value))) {
 				move.setMove(tempMove.value, boards[i].move);
 				
-				if (alpha < move.value) {
+				if (flags[0] && alpha < move.value) {
 					alpha = move.value;
 				}
-			}
-			else if (player == Board.PLAYERS[1] && tempMove.value < move.value) {
-				move.setMove(tempMove.value, boards[i].move);
-				
-				if (beta > move.value) {
+				else if (flags[1] && beta > move.value) {
 					beta = move.value;
 				}
 			}

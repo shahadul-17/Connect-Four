@@ -3,7 +3,7 @@ package connect.four.engine;
 public class GameSettings {
 	
 	private static final short[] DEPTHS = {
-		1024, 2048, 4096, 8192
+		256, 512, 1024, 2048
 	};
 	
 	private byte mode, player;
